@@ -1,16 +1,28 @@
 package com.example.app;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Links the Java file to its XML layout design
+        setContentView(R.layout.data_entry_activity);
 
-//        setContentView(R.layout.activity_main);
+        Button btnEnterData = findViewById(R.id.btnEnterData);
+
+        btnEnterData.setOnClickListener(v -> {
+            Intent intent =
+                    new Intent(MainActivity.this,
+                            DataActivity.class);
+            startActivity(intent);
+        });
     }
 }
+
