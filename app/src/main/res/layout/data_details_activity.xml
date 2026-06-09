@@ -18,48 +18,86 @@
             android:textStyle="bold"
             android:paddingBottom="20dp"/>
 
-        <EditText
+        <TextView
             android:id="@+id/etAge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
             android:hint="Age"
             android:inputType="number"
             android:minHeight="54dp" />
 
-        <EditText
-            android:id="@+id/etMissedDoses"
+        <TextView
+            android:id="@+id/genderSelectOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number of missed doses"
-            android:minHeight="54dp"
-            android:paddingTop="25dp"
-            android:inputType="number"/>
+            android:background="@android:drawable/editbox_background"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawablePadding="12dp"
+            android:hint="Gender"
+            android:paddingTop="25dp"/>
 
-        <EditText
+        <TextView
             android:id="@+id/etDistance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
             android:hint="Distance to facility (km)"
             android:minHeight="54dp"
             android:paddingTop="25dp"
             android:inputType="numberDecimal"/>
 
-        <EditText
-            android:id="@+id/etPreviousTB"
+        <TextView
+            android:id="@+id/etMissedDoses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
+            android:hint="Number of missed doses"
             android:minHeight="54dp"
             android:paddingTop="25dp"
-            android:hint="Previous TB treatment (Yes/No)"/>
+            android:inputType="number"/>
 
-        <EditText
-            android:id="@+id/etAlcoholUse"
+
+
+        <TextView
+            android:id="@+id/TreatmentPhaseSelectOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Alcohol use (Yes/No)"
-            android:minHeight="54dp"
-            android:paddingTop="25dp"
-            android:inputType="" />
+            android:background="@android:drawable/editbox_background"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawablePadding="12dp"
+            android:hint="Treatment Phase"
+            android:paddingTop="25dp"/>
+
+        <TextView
+            android:id="@+id/SideEffectsSelectOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawablePadding="12dp"
+            android:hint="Side Effects"
+            android:paddingTop="25dp" />
+
+        <TextView
+            android:id="@+id/FamilySupportSelectOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawablePadding="12dp"
+            android:hint="Family Support"
+            android:paddingTop="25dp" />
+
+        <TextView
+            android:id="@+id/ReminderExposureSelectOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/editbox_background"
+            android:drawableEnd="@android:drawable/arrow_down_float"
+            android:drawablePadding="12dp"
+            android:hint="Reminder Exposure"
+            android:paddingTop="25dp" />
 
         <Button
             android:id="@+id/btnAnalyze"

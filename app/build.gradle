@@ -36,3 +36,12 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 }
+
+dependencies {
+    // Existing dependencies (like appcompat, material, etc.)
+    implementation libs.appcompat
+    implementation libs.material
+
+    // Add your TensorFlow Lite dependency here:
+    implementation 'org.tensorflow:tensorflow-lite:2.14.0'
+}
