@@ -16,16 +16,17 @@
             android:text="Enter patient information for adherence analysis"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="20dp"/>
+            android:paddingBottom="22dp"/>
 
-        <TextView
+        <EditText
             android:id="@+id/etAge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:hint="Age"
             android:inputType="number"
-            android:minHeight="54dp" />
+            android:minHeight="54dp"
+            android:layout_marginBottom="6dp"/>
 
         <TextView
             android:id="@+id/genderSelectOption"
@@ -35,28 +36,32 @@
             android:drawableEnd="@android:drawable/arrow_down_float"
             android:drawablePadding="12dp"
             android:hint="Gender"
-            android:paddingTop="25dp"/>
+            android:paddingTop="18dp"
+            android:minHeight="54dp"
+            android:textSize="18dp"
+            android:layout_marginBottom="6dp"/>
 
-        <TextView
+        <EditText
             android:id="@+id/etDistance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:hint="Distance to facility (km)"
             android:minHeight="54dp"
-            android:paddingTop="25dp"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="6dp"/>
 
-        <TextView
+        <EditText
             android:id="@+id/etMissedDoses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:hint="Number of missed doses"
+            android:paddingTop="18dp"
             android:minHeight="54dp"
-            android:paddingTop="25dp"
-            android:inputType="number"/>
-
+            android:inputType="number"
+            android:textSize="18dp"
+            android:layout_marginBottom="6dp"/>
 
 
         <TextView
@@ -65,9 +70,11 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:drawableEnd="@android:drawable/arrow_down_float"
-            android:drawablePadding="12dp"
+            android:textSize="18dp"
             android:hint="Treatment Phase"
-            android:paddingTop="25dp"/>
+            android:paddingTop="18dp"
+            android:minHeight="54dp"
+            android:layout_marginBottom="6dp"/>
 
         <TextView
             android:id="@+id/SideEffectsSelectOption"
@@ -75,9 +82,12 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:drawableEnd="@android:drawable/arrow_down_float"
+            android:textSize="18dp"
             android:drawablePadding="12dp"
             android:hint="Side Effects"
-            android:paddingTop="25dp" />
+            android:paddingTop="18dp"
+            android:minHeight="54dp"
+            android:layout_marginBottom="6dp"/>
 
         <TextView
             android:id="@+id/FamilySupportSelectOption"
@@ -85,9 +95,12 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:drawableEnd="@android:drawable/arrow_down_float"
+            android:textSize="18dp"
             android:drawablePadding="12dp"
             android:hint="Family Support"
-            android:paddingTop="25dp" />
+            android:paddingTop="18dp"
+            android:minHeight="54dp"
+            android:layout_marginBottom="6dp"/>
 
         <TextView
             android:id="@+id/ReminderExposureSelectOption"
@@ -95,16 +108,20 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:drawableEnd="@android:drawable/arrow_down_float"
+            android:textSize="18dp"
             android:drawablePadding="12dp"
             android:hint="Reminder Exposure"
-            android:paddingTop="25dp" />
+            android:paddingTop="18dp"
+            android:minHeight="54dp"
+            android:layout_marginBottom="6dp"/>
 
         <Button
             android:id="@+id/btnAnalyze"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:text="Analyze" />
+            android:text="Analyze"
+            android:layout_marginBottom="6dp"/>
 
     </LinearLayout>
 

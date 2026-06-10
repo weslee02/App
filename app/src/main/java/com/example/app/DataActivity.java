@@ -152,14 +152,18 @@ public class DataActivity  extends AppCompatActivity {
 
             // 5. Structure the Output Array
             // Assumes a single float output (e.g., adherence probability score between 0 and 1)
-            float[][] outputVal = new float[1][1];
+            float[][] outputVal = new float[1][2];
 
             // 6. Execute Model Inference
             tflite.run(inputVal, outputVal);
 
             // 7. Display Result
-            float predictionResult = outputVal[0][0];
-            showResultDialog(predictionResult);
+//            float predictionResult = outputVal[0][0];
+
+            float class0Prob = outputVal[0][0];
+            float class1Prob = outputVal[0][1];
+
+            showResultDialog(class1Prob);
 
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Invalid number inputs.", Toast.LENGTH_SHORT).show();
