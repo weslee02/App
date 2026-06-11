@@ -3,19 +3,23 @@ package com.example.app;
 import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import org.tensorflow.lite.Interpreter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
-public class DataActivity  extends AppCompatActivity {
+public class InputFormFragment extends Fragment {
 
     // UI Elements
     private TextView etAge, etDistance, etMissedDoses;
@@ -34,50 +38,58 @@ public class DataActivity  extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
 
+    public InputFormFragment() {
+        // Required empty public constructor
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.data_details_activity);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // 1. Inflate the fragment layout matrix container
+        View view = inflater.inflate(R.layout.data_details_activity, container, false);
 
-        // Initialize UI Elements
-        initViews();
+        // 2. Initialize UI Elements bound to the layout view instance
+        initViews(view);
 
-        dbHelper = new DatabaseHelper(this);
+        // 3. Use requireContext() to safely initialize SQLite
+        dbHelper = new DatabaseHelper(requireContext());
 
-        // Initialize TensorFlow Lite Model
+        // 4. Initialize TensorFlow Lite Model
         try {
             tflite = new Interpreter(loadModelFile());
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to load TFLite model.", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), "Failed to load TFLite model.", Toast.LENGTH_LONG).show();
         }
 
-        // Set up Dropdown Dialogs
+        // 5. Set up Dropdown Dialogs
         setupDropdown(genderSelect, genderOptions);
         setupDropdown(treatmentPhaseSelect, phaseOptions);
         setupDropdown(sideEffectsSelect, sideEffectsOptions);
         setupDropdown(familySupportSelect, supportOptions);
         setupDropdown(reminderExposureSelect, reminderOptions);
 
-        // Analyze Button Click Listener
+        // 6. Analyze Button Click Listener
         btnAnalyze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 runInference();
             }
         });
+
+        return view;
     }
 
-    private void initViews() {
-        etAge = findViewById(R.id.etAge);
-        genderSelect = findViewById(R.id.genderSelectOption);
-        etDistance = findViewById(R.id.etDistance);
-        etMissedDoses = findViewById(R.id.etMissedDoses);
-        treatmentPhaseSelect = findViewById(R.id.TreatmentPhaseSelectOption);
-        sideEffectsSelect = findViewById(R.id.SideEffectsSelectOption);
-        familySupportSelect = findViewById(R.id.FamilySupportSelectOption);
-        reminderExposureSelect = findViewById(R.id.ReminderExposureSelectOption);
-        btnAnalyze = findViewById(R.id.btnAnalyze);
+    private void initViews(View view) {
+        etAge = view.findViewById(R.id.etAge);
+        genderSelect = view.findViewById(R.id.genderSelectOption);
+        etDistance = view.findViewById(R.id.etDistance);
+        etMissedDoses = view.findViewById(R.id.etMissedDoses);
+        treatmentPhaseSelect = view.findViewById(R.id.TreatmentPhaseSelectOption);
+        sideEffectsSelect = view.findViewById(R.id.SideEffectsSelectOption);
+        familySupportSelect = view.findViewById(R.id.FamilySupportSelectOption);
+        reminderExposureSelect = view.findViewById(R.id.ReminderExposureSelectOption);
+        btnAnalyze = view.findViewById(R.id.btnAnalyze);
     }
 
     /**
@@ -87,7 +99,8 @@ public class DataActivity  extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DataActivity.this);
+                // Fixed context reference
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(textView.getHint());
                 builder.setItems(options, (dialog, which) -> textView.setText(options[which]));
                 builder.show();
@@ -99,7 +112,8 @@ public class DataActivity  extends AppCompatActivity {
      * Memory-maps the model file from the assets folder.
      */
     private MappedByteBuffer loadModelFile() throws IOException {
-        AssetFileDescriptor fileDescriptor = this.getAssets().openFd("model.tflite");
+        // Fixed assets access point wrapper
+        AssetFileDescriptor fileDescriptor = requireActivity().getAssets().openFd("model.tflite");
         FileInputStream inputStream = new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel = inputStream.getChannel();
         long startOffset = fileDescriptor.getStartOffset();
@@ -107,13 +121,12 @@ public class DataActivity  extends AppCompatActivity {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength);
     }
 
-
     /**
      * Gathers inputs, encodes categorical strings to floats, and runs ML inference.
      */
     void runInference() {
         if (tflite == null) {
-            Toast.makeText(this, "Model is not initialized.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Model is not initialized.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -123,7 +136,7 @@ public class DataActivity  extends AppCompatActivity {
                 TextUtils.isEmpty(treatmentPhaseSelect.getText()) || TextUtils.isEmpty(sideEffectsSelect.getText()) ||
                 TextUtils.isEmpty(familySupportSelect.getText()) || TextUtils.isEmpty(reminderExposureSelect.getText())) {
 
-            Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -137,12 +150,10 @@ public class DataActivity  extends AppCompatActivity {
             float genderEncoded = getIndex(genderOptions, genderSelect.getText().toString());
             float phaseEncoded = getIndex(phaseOptions, treatmentPhaseSelect.getText().toString());
             float sideEffectsEncoded = getIndex(sideEffectsOptions, sideEffectsSelect.getText().toString());
-            // Pass the options array as the first parameter, and the text as the second
             float supportEncoded = getIndex(supportOptions, familySupportSelect.getText().toString());
             float reminderEncoded = getIndex(reminderOptions, reminderExposureSelect.getText().toString());
 
             // 4. Structure the Input Array (Shape: [1, 8] for 8 features)
-            // Note: Update the order below to precisely match your training dataset schema
             float[][] inputVal = new float[][]{{
                     age,
                     genderEncoded,
@@ -155,16 +166,11 @@ public class DataActivity  extends AppCompatActivity {
             }};
 
             // 5. Structure the Output Array
-            // Assumes a single float output (e.g., adherence probability score between 0 and 1)
             float[][] outputVal = new float[1][2];
 
             // 6. Execute Model Inference
             tflite.run(inputVal, outputVal);
 
-            // 7. Display Result
-//            float predictionResult = outputVal[0][0];
-
-            float class0Prob = outputVal[0][0];
             float class1Prob = outputVal[0][1];
 
             String genderStr = genderSelect.getText().toString();
@@ -173,16 +179,12 @@ public class DataActivity  extends AppCompatActivity {
             String supportStr = familySupportSelect.getText().toString();
             String reminderStr = reminderExposureSelect.getText().toString();
 
-            // Modified: Pass the parsed/text data down to the dialog for saving
             showResultDialog(age, genderStr, distance, missedDoses, phaseStr, sideEffectsStr, supportStr, reminderStr, class1Prob);
 
-//            showResultDialog(class1Prob);
-
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid number inputs.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Invalid number inputs.", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private float getIndex(String[] array, String value) {
         for (int i = 0; i < array.length; i++) {
@@ -196,10 +198,9 @@ public class DataActivity  extends AppCompatActivity {
      */
     private void showResultDialog(final float age, final String gender, final float distance, final float missedDoses,
                                   final String phase, final String sideEffects, final String support, final String reminder, final float score) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Analysis Result");
 
-        // Customizing the message based on output score (assuming risk/probability output)
         String message = String.format("Adherence Risk Score: %.2f%%\n", score * 100);
         if (score > 0.5) {
             message += "Warning: High risk of non-adherence. Intervention recommended.";
@@ -208,8 +209,6 @@ public class DataActivity  extends AppCompatActivity {
         }
 
         builder.setMessage(message);
-//        builder.setPositiveButton("OK", null);
-        // Turn "OK" into a saving mechanism
         builder.setPositiveButton("Save to Database", (dialog, which) -> {
             boolean isInserted = dbHelper.insertRecord(
                     age,
@@ -224,10 +223,10 @@ public class DataActivity  extends AppCompatActivity {
             );
 
             if (isInserted) {
-                Toast.makeText(DataActivity.this, "Data successfully saved for model training!", Toast.LENGTH_SHORT).show();
-                clearFormFields(); // Helper to wipe inputs for the next patient entry
+                Toast.makeText(requireContext(), "Data successfully saved for model training!", Toast.LENGTH_SHORT).show();
+                clearFormFields();
             } else {
-                Toast.makeText(DataActivity.this, "Database storage failure.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Database storage failure.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -235,9 +234,6 @@ public class DataActivity  extends AppCompatActivity {
         builder.show();
     }
 
-    /**
-     * Reset form clean after a safe storage transaction
-     */
     private void clearFormFields() {
         etAge.setText("");
         genderSelect.setText("");
@@ -247,16 +243,17 @@ public class DataActivity  extends AppCompatActivity {
         sideEffectsSelect.setText("");
         familySupportSelect.setText("");
         reminderExposureSelect.setText("");
-//        clearFieldErrors();
     }
 
-
     @Override
-    protected void onDestroy() {
+    public void onDestroyView() {
+        // Close resources when fragment view scope terminates
         if (tflite != null) {
             tflite.close();
         }
-        super.onDestroy();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+        super.onDestroyView();
     }
-
 }

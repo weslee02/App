@@ -25,6 +25,8 @@
 
     <activity android:name=".DataActivity" android:exported="false" />
 
+    <activity android:name=".ViewRecordsActivity" android:exported="false" />
+
     </application>
 
 </manifest>
